@@ -1,0 +1,42 @@
+Public Class Form1
+    Private TextBox2 As Object
+    Private TextBox1 As Object
+
+    Private Sub Main1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim dbLotStat As Array
+        Dim dbZoneName As Array
+        Dim dbCount As Integer = 0
+
+        Dim i As Integer
+        Using connObj As New SqlClient.SqlConnection("Data Source=LAPTOP-MD8MPQ3M;Initial Catalog=LotStatus;AttachDbFilename=C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\DATA;Integrated Security=True;User Instance=false")
+            Using cmdObj As New SqlClient.SqlCommand("select LotStatus,ZoneName, from LotDetails where LotStatus = 'FALSE'", connObj)
+
+                connObj.Open()
+                Using readerObj As SqlClient.SqlDataReader = cmdObj.ExecuteReader
+                    dbLotStat = readerObj("LotStatus")
+                    dbZoneName = readerObj("ZoneName")
+
+                    i = 1
+                    For i = 1 To dbZoneName.Length
+
+                    Next
+
+
+                    If (dbLotStat(i) = "false") Then
+                        dbCount += 1
+
+                    End If
+                    Console.WriteLine(dbCount)
+                    TextBox1.Text = "Available Parking Spots" & dbCount
+                    TextBox2.Text = "Zone Name" & dbZoneName(0)
+
+
+
+                End Using
+
+            End Using
+            connObj.Close()
+        End Using
+
+    End Sub
+End Class
